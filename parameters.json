@@ -1,0 +1,6 @@
+{
+    "folder_name": "YoloWeights",
+    "weights": ["panrem3.weights"],
+    "cfg":  ["panrem3.cfg"],
+    "names":  ["panrem3.names"]
+  }
