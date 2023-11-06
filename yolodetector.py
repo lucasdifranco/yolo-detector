@@ -76,6 +76,8 @@ class imgyolo3:
 
         # Load the network
         network = cv2.dnn.readNetFromDarknet(cfg_path, weights_path)
+        network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
         # Adding colours to each object type
         colours = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
@@ -99,7 +101,7 @@ class detectionyolo3:
 
     def __init__(
         self,
-        path: os.path,
+        path,
         network: cv2.dnn.Net,
         probability_minimum: float,
         threshold: float,
@@ -156,7 +158,7 @@ class detectionyolo3:
         # Reading image with opencv (returns a numpy array by default)
         # Note that opencv reads image in BRG format
         self.img_BRG = cv2.imread(self.img_path)
-
+        #self.img_BRG = self.img_path
         # Getting shape of image
         self.h, self.w = self.img_BRG.shape[:2]
 
@@ -167,7 +169,7 @@ class detectionyolo3:
         #  mean,
         #  swapRB=True)
         self.blob = cv2.dnn.blobFromImage(
-            self.img_BRG, 1 / 255.0, (416, 416), swapRB=True, crop=False
+            self.img_BRG, 1 / 255.0, (1024, 1024), swapRB=True, crop=False
         )
 
     def foward_pass(self) -> None:
@@ -293,9 +295,6 @@ class detectionyolo3:
             print("> Prediction took {:.4f} seconds".format(self.pct_time))
             print("> Done")
 
+
         return self.img_BRG, out_obj
 
-
-img_path = r"Images\TCC_20231007_00478.jpg"
-network, layers_names_output, colours, labels = imgyolo3().load_network()
-image, object_list = detectionyolo3(img_path,network,0.50,0.30,colours,layers_names_output, labels).run_detection()
