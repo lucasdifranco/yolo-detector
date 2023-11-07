@@ -6,27 +6,30 @@ import numpy as np
 from time import sleep
 
 main_path = (
-    r"C:\Users\lucas\OneDrive\Documentos\TCC\Repos\yolo-detector\Images\Trecho-Teste"
+    r"E:\DER-MG\1. CRGs\CRG 23\Videos\773LMG0040-C-1-0-27\CAMpp"
 )
 network, layers_names_output, colours, labels = imgyolo3().load_network()
 
 object_list_end = []
 for file in os.listdir(main_path):
     if file.endswith(".jpg"):
+        print(file)
         img_path = os.path.join(main_path, file)
         image, object_list = detectionyolo3(img_path, 
                                             network, 
-                                            0.50, 
-                                            0.15, 
+                                            0.10, 
+                                            0.10, 
                                             colours, 
                                             layers_names_output, 
                                             labels
                                             ).run_detection()
+        image = cv2.resize(image,(600,600))
         cv2.imshow("image",image)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         if len(object_list) != 0:
-            sleep(2)
+            print(object_list)
+            sleep(1)
 
 
 # print(object_list_end)

@@ -259,41 +259,45 @@ class detectionyolo3:
 
                 x_min, y_min = self.bboxes[i][0], self.bboxes[i][1]
                 box_width, box_height = self.bboxes[i][2], self.bboxes[i][3]
+                area = box_width * box_height
+                if area > 500:
 
-                x_max = x_min + box_width
-                y_max = y_min + box_height
+                    x_max = x_min + box_width
+                    y_max = y_min + box_height
 
-                colour_box_current = self.colours[self.class_number[i]].tolist()
+                    colour_box_current = self.colours[self.class_number[i]].tolist()
 
-                # Create bounding box on original image
+                    # Create bounding box on original image
 
-                cv2.rectangle(
-                    self.img_BRG,
-                    (x_min, y_min),
-                    (x_max, y_max),
-                    colour_box_current,
-                    1,  # You can change thickness in this line
-                )
+                    cv2.rectangle(
+                        self.img_BRG,
+                        (x_min, y_min),
+                        (x_max, y_max),
+                        colour_box_current,
+                        1,  # You can change thickness in this line
+                    )
 
-                # Add Label and Confidence on original image
-                obj_txt = "{}: {:.4f}".format(
-                    self.labels[int(self.class_number[i])], self.confidences[i]
-                )
+                    # Add Label and Confidence on original image
+                    obj_txt = "{}: {:.4f}".format(
+                        self.labels[int(self.class_number[i])], self.confidences[i]
+                    )
 
-                out_obj.append(obj_txt)
+                    
 
-                cv2.putText(
-                    self.img_BRG,
-                    obj_txt,
-                    (x_min, int(y_min - 5)),
-                    cv2.FONT_HERSHEY_PLAIN,
-                    1.5,
-                    colour_box_current,
-                    2,
-                )
+                    out_obj.append((obj_txt,area))
 
-            print("> Prediction took {:.4f} seconds".format(self.pct_time))
-            print("> Done")
+                    cv2.putText(
+                        self.img_BRG,
+                        obj_txt,
+                        (x_min, int(y_min - 5)),
+                        cv2.FONT_HERSHEY_PLAIN,
+                        1.5,
+                        colour_box_current,
+                        2,
+                    )
+
+                print("> Prediction took {:.4f} seconds".format(self.pct_time))
+                print("> Done")
 
 
         return self.img_BRG, out_obj
